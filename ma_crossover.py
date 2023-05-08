@@ -11,8 +11,36 @@ def ema (self, array, period ):
     
     return ema 
 
-def ma_crossover( lower, higher, index ):
 
+def ma_crossover(self, array, period, lower, higher ):
+    import numpy as np
+
+    check = np.empty_like(array)
+    check = np.full( array.shape , 0)
+
+    large_ema = self.ema(lower)
+    small_ema = self.ema(higher)
+    limit = 7
+
+    for index in range(limit , len(array) ):
+  
+        for length in range(1, limit+1): 
+
+        if  close[index - length] < large_ema[index - length] and close[index - length] < small_ema[index - length] and close[index] > large_ema[index] and close[index] > small_ema[index]  :
+            
+            check[index] = 1  # Set the signal value to 1 for the corresponding index
+            break 
+        elif close[index - length] > large_ema[index - length] and close[index - length] > small_ema[index - length] and close[index] < large_ema[index] and small_ema[index] < close[index] :
+            check[index] = -1  # Set the signal value to -1 for the corresponding index
+            
+            break # when satisfied break the loop immediately and move on next index
+
+    return check 
+
+""" ALTERNATIVE METHOD """
+"""Both works for backtesting and forward testing but above one is easier to implement """
+def ma_crossover( lower, higher, index ):
+    
     close = self.close 
     check = np.zeros(len(close))  # Initialize an empty signal array
     large_ema = self.ema(lower)
